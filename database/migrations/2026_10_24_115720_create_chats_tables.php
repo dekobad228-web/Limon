@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('chats', function (Blueprint $table) {
             $table->comment('Чаты пользователей');
             $table->id();
+            $table->foreignId('owner_id')->constrained('users')->default(null);
             $table->string('name', 100)->comment('Уникальное название чата. Создана с расчётом на групповые чаты');
             $table->comment('Создатель чата. Нужна только для информации')->foreignId('owner_id')->constrained('users', 'id');
             $table->timestampsTz();
@@ -36,6 +37,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('chats_tables');
+        Schema::dropIfExists('chat_members');
+        Schema::dropIfExists('chats');
     }
 };

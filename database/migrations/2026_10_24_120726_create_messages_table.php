@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('messages', function (Blueprint $table) {
             $table->comment('Таблица всех сообщений');
             $table->id();
-            $table->comment('Связанный чат')->foreignId('chat_id')->constrained('chats', 'id');
-            $table->comment('Отправитель')->foreignId('sender_id')->constrained('users', 'id');
+            $table->foreignId('chat_id')->constrained('chats', 'id')->comment('Связанный чат');
+            $table->foreignId('sender_id')->constrained('users', 'id')->comment('Отправитель');
             $table->longText('body')->comment('Пока только текстовые сообщения');
             $table->boolean('is_hidden')->comment('Функция скрыть для себя или для всех. Скорее всего уберу');
             $table->timestampsTz();

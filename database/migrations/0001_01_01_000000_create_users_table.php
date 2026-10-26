@@ -16,13 +16,11 @@ return new class extends Migration
             $table->id();
             $table->string('name')->comment('Не уникальное имя. Не стал делать полноценное ФИО');
             $table->string('email')->unique()->comment('Уникальный email');
-            $table->timestamp('email_verified_at')->nullable()->comment('Проверка верификации. В dev режиме не обязательна');
+            $table->timestampTz('email_verified_at')->nullable()->comment('Проверка верификации. В dev режиме не обязательна');
             $table->string('password')->comment('Хешированный пароль');
             $table->rememberToken()->comment('Токен постоянного подключения');
             $table->timestampsTz();
             $table->softDeletesTz();
-
-            $table->index('email');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -35,9 +33,9 @@ return new class extends Migration
         Schema::create('user_presence', function (Blueprint $table) {
             $table->comment('Статус пользователя');
             $table->id();
-            $table->foreignId('user_id')->constrained('users', 'id');
+            $table->foreignId('user_id')->constrained('users', 'id')->unique();
             $table->boolean('is_online')->default(false)->comment('Статус для показа нахождения пользователя в сети');
-            $table->timestampsTz('last_seen_at')->comment('Фиксация последнего времени пребывания в сети');
+            $table->dateTimeTz('last_seen_at')->comment('Фиксация последнего времени пребывания в сети');
         });
 
         Schema::create('sessions', function (Blueprint $table) {
@@ -56,8 +54,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('user_presence');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('users');
     }
 };
