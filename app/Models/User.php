@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Exceptions\InvalidUserTockenException;
+use Throwable;
 
 /**
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
@@ -76,5 +78,21 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Chat::class, 'chat_members', 'user_id', 'chat_id')
             ->withPivot('created_at');
+    }
+
+    public function getRouteKey()
+    {
+        return app('codec.user')->encrypt($this->id);
+    }
+
+    public function resolveRouteBinding($value, $field = 'id')
+    {
+        try {
+            $id = intval(app('codec.user')->decrypt($value));
+        } catch (\Throwable $e) {
+            throw new InvalidUserTockenException();
+        }
+
+        return $this->where('id', $id)->first();
     }
 }

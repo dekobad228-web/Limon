@@ -5,9 +5,8 @@ namespace App\Models\Communication;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\{Model, SoftDeletes};
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany};
+use App\Exceptions\InvalidChatTockenException;
 
 /**
  * @method static \Database\Factories\Communication\ChatFactory factory($count = null, $state = [])
@@ -31,6 +30,10 @@ class Chat extends Model
         'owner_id'
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime'
+    ];
+
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
@@ -45,5 +48,23 @@ class Chat extends Model
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class, 'chat_id');
+    }
+
+    public function getRouteKey()
+    {
+
+        return app('codec.chat')->encrypt($this->id);
+    }
+
+    public function resolveRouteBinding($value, $field = 'id')
+    {
+
+        try {
+            $id = intval(app('codec.chat')->decrypt($value));
+        } catch (\Throwable $th) {
+            throw new InvalidChatTockenException();
+        }
+
+        return $this->where('id', $id)->first();
     }
 }

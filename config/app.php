@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'codec_key' => env('CODEC_SECRET_KEY')
+
 ];
