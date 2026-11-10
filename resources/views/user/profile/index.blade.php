@@ -3,5 +3,5 @@
 @section('title', 'Профиль')
 
 @section('content')
-Получилось
+    <p><span aria-hidden="true" class="text-term-accent">$</span> Получилось</p>
 @endsection

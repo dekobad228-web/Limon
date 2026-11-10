@@ -6,6 +6,49 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Моноширинный шрифт везде: sans тоже указывает на mono-стек */
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Menlo, monospace;
+    --font-sans: var(--font-mono);
+
+    /* Без скруглений и теней */
+    --radius-*: initial;
+    --shadow-*: initial;
+    --drop-shadow-*: initial;
+
+    --color-term-bg: #0c0c0c;
+    --color-term-panel: #111111;
+    --color-term-fg: #cccccc;
+    --color-term-dim: #6b6b6b;
+    /* для контраста AA замените на #8a8a8a */
+    --color-term-border: #3a3a3a;
+    --color-term-border-active: #33ff66;
+    --color-term-accent: #33ff66;
+    --color-term-cyan: #4dd0e1;
+    --color-term-yellow: #ffd54a;
+    --color-term-red: #ff5555;
+    --color-term-magenta: #ff79c6;
+    --color-term-sel-bg: #33ff66;
+    --color-term-sel-fg: #0c0c0c;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+.cursor-blink::after {
+    content: '█';
+    animation: blink 1s steps(1) infinite;
+}
+
+::selection {
+    background: #33ff66;
+    color: #0c0c0c;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cursor-blink::after {
+        animation: none;
+    }
 }

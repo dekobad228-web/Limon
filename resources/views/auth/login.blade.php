@@ -3,47 +3,41 @@
 @section('title', 'Войти в систему')
 
 @section('content')
-    <form action="{{ route('login.store') }}" method="POST"
-        class="mx-auto max-w-md space-y-5 rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
+    <form action="{{ route('login.store') }}" method="POST" class="mx-auto w-full max-w-[60ch] space-y-1 px-1">
         @csrf
 
-        <h1 class="text-2xl font-bold text-gray-900">Вход</h1>
+        <h2 class="mb-1 uppercase text-term-magenta"># Вход</h2>
 
         <div>
-            <label for="email" class="mb-1.5 block text-sm font-medium text-gray-700">
-                Email
-            </label>
-
-            <input type="email" name="email" id="email" value="{{ old('email', session('email')) }}" required
-                maxlength="100" placeholder="Введите Email" autocomplete="email"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
-
+            <div class="flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
+                <label for="email" class="shrink-0 text-term-dim sm:w-[22ch]">Email:</label>
+                <x-term.input type="email" name="email" id="email" value="{{ old('email', session('email')) }}"
+                    required maxlength="100" placeholder="Введите Email" autocomplete="email" class="flex-1" />
+            </div>
             @error('email')
-                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                <p role="alert" class="text-term-red">! {{ $message }}</p>
             @enderror
         </div>
 
         <div>
-            <label for="password" class="mb-1.5 block text-sm font-medium text-gray-700">
-                Пароль
-            </label>
-
-            <input type="password" name="password" id="password" required placeholder="Введите Пароль" autocomplete="current-password"
-                class="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100">
-
+            <div class="flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
+                <label for="password" class="shrink-0 text-term-dim sm:w-[22ch]">Пароль:</label>
+                <x-term.input type="password" name="password" id="password" required placeholder="Введите Пароль"
+                    autocomplete="current-password" class="flex-1" />
+            </div>
             @error('password')
-                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                <p role="alert" class="text-term-red">! {{ $message }}</p>
             @enderror
         </div>
 
-        <button type="submit"
-            class="w-full rounded-lg bg-blue-600 px-4 py-2.5 font-medium text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-            Войти
-        </button>
+        <div class="pt-1">
+            <x-term.button type="submit">Войти</x-term.button>
+        </div>
 
-        <p class="text-center text-sm text-gray-600">
+        <p class="text-term-dim">
             Нет аккаунта?
-            <a href="{{ route('register.index') }}" class="font-medium text-blue-600 hover:text-blue-700">
+            <a href="{{ route('register.index') }}"
+                class="text-term-cyan underline decoration-dotted hover:bg-term-sel-bg hover:text-term-sel-fg focus-visible:bg-term-sel-bg focus-visible:text-term-sel-fg focus-visible:outline-none">
                 Зарегистрироваться
             </a>
         </p>

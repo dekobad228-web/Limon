@@ -8,53 +8,46 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="min-h-screen bg-gray-50 text-gray-900 antialiased">
-    <header class="border-b border-gray-200 bg-white">
-        <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-6">
-            <div class="flex items-center gap-2 sm:gap-3">
-                <a href="/" class="text-xl font-bold tracking-tight text-gray-900 transition hover:text-blue-600">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <h1>{{ request()->user()->name }}</h1>
-            </div>
-            <nav class="flex items-center gap-2 sm:gap-3">
+<body class="h-screen w-screen overflow-hidden bg-term-bg font-mono text-sm leading-5 text-term-fg antialiased">
+    <div class="flex h-full flex-col">
+        <header class="flex items-center gap-2 border-b border-term-border px-1">
+            <a href="/"
+                class="px-1 text-term-accent hover:bg-term-sel-bg hover:text-term-sel-fg focus-visible:bg-term-sel-bg focus-visible:text-term-sel-fg focus-visible:outline-none">
+                [ {{ config('app.name', 'Laravel') }} ]
+            </a>
+            <span aria-hidden="true" class="text-term-border">─</span>
+            <p class="min-w-0 flex-1 truncate text-term-cyan">{{ request()->user()?->name }}</p>
+            <nav aria-label="Основное меню" class="flex items-center gap-1">
                 @auth
-                    <a href="{{ route('user.chats.list', request()->user()) }}"
-                        class="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 hover:text-gray-900 sm:px-4">
-                        Чаты
-                    </a>
+                    <x-term.button href="{{ route('user.chats.list', request()->user()) }}">Чаты</x-term.button>
                     <form action="{{ route('logout') }}" method="post">
                         @csrf
-                        <button type="submit">Выйти</button>
+                        <x-term.button type="submit" danger>Выйти</x-term.button>
                     </form>
                 @else
-                    <a href="{{ route('login.index') }}"
-                        class="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 hover:text-gray-900 sm:px-4">
-                        Вход
-                    </a>
-
-                    <a href="{{ route('register.index') }}"
-                        class="rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:px-4">
-                        Регистрация
-                    </a>
+                    <x-term.button href="{{ route('login.index') }}">Вход</x-term.button>
+                    <x-term.button href="{{ route('register.index') }}">Регистрация</x-term.button>
                 @endauth
             </nav>
-        </div>
-    </header>
+        </header>
 
-    <main class="mx-auto w-full max-w-6xl px-5 py-8 sm:px-6 sm:py-10">
-        @hasSection('title')
-            <div class="mb-8">
-                <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-                    @yield('title')
-                </h1>
-            </div>
-        @endif
+        <main class="flex min-h-0 flex-1 flex-col p-2 pt-4">
+            <x-term.window tag="h1" class="flex min-h-0 flex-1 flex-col">
+                <x-slot:title>@yield('title')</x-slot:title>
 
-        <div class="min-w-0">
-            @yield('content')
-        </div>
-    </main>
+                <div
+                    class="flex min-h-0 flex-1 flex-col overflow-y-auto pt-1 [scrollbar-color:var(--color-term-border)_var(--color-term-bg)] [scrollbar-width:thin] [&::-webkit-scrollbar-thumb]:bg-term-border [&::-webkit-scrollbar-track]:bg-term-bg [&::-webkit-scrollbar]:w-2">
+                    @yield('content')
+                </div>
+            </x-term.window>
+        </main>
+
+        <x-term.statusbar>
+            <span><kbd>Tab</kbd> Навигация</span>
+            <span><kbd>Enter</kbd> Выбрать / Отправить</span>
+            <span class="ml-auto hidden sm:inline">{{ config('app.name', 'Laravel') }}</span>
+        </x-term.statusbar>
+    </div>
 </body>
 
 </html>
